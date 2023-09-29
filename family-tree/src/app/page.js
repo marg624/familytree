@@ -24,7 +24,7 @@ export default function Home() {
  
             <div className="flex-wrap items-center justify-center">
                 <h2 className={`mb-3 text-2xl font-semibold`}>
-                Welcome to the Miranda Family Tree! <br/>
+                Welcome to the [Campana, Guerrero, Miranda] Family Tree Site! <br/>
                 </h2>
                 <div className="flex-wrap items-center justify-center">
                   Please enter the password to view:<br/>
