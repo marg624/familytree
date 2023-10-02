@@ -11,8 +11,8 @@ export default function Home() {
   const [tabsOnSelect, setTabsOnSelect] = useState([select, notSelect, notSelect]);
   const [tabs, setTabs] = useState(["visible", "hidden", "hidden"]);
 
-    const notSelect2 = "inline-flex p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group" 
-  const select2 = "inline-flex p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group"
+  const notSelect2 = "inline-flex p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group" 
+  const select2 = "inline-flex p-4 text-lime-800 border-b-2 border-lime-800 rounded-t-lg active dark:text-lime-800 dark:border-lime-800 group"
   const [tabsOnSelect2, setTabsOnSelect2] = useState([select2, notSelect2, notSelect2]);
 
   function checkPassword() {
@@ -26,18 +26,18 @@ export default function Home() {
 
   return (
 
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-12">
     {
       !isAuthenticated && 
  
-            <div className="flex-wrap items-center justify-center">
-                <h2 className={`mb-3 text-2xl font-semibold`}>
-                Welcome to the [Campana, Guerrero, Miranda] Family Tree Site! <br/>
+            <div className="flex-wrap items-center justify-center text-center">
+                <h2 className={`mb-4 text-3xl font-semibold`}>
+                Welcome to the <br/>[Campana, Guerrero, Miranda]<br/> Family Tree Site! <br/>
                 </h2>
-                <div className="flex-wrap items-center justify-center">
+                <div className="flex-wrap items-center justify-center space-y-3">
                   Please enter the password to view:<br/>
-                  <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} /><br/>
-                  <button onClick={checkPassword} className="bg-blue-500 text-white font-bold py-2 px-3 rounded">
+                  <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} className="border-2 border-slate-950 rounded" /><br/>
+                  <button onClick={checkPassword} className="bg-lime-800 text-white font-bold py-2 px-3 rounded">
                       SUBMIT
                   </button>
                 </div>
@@ -83,6 +83,7 @@ export default function Home() {
                 height={37}
                 priority
               />
+              
             </div>
           </div>
 
