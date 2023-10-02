@@ -11,8 +11,8 @@ export default function Home() {
   const [tabsOnSelect, setTabsOnSelect] = useState([select, notSelect, notSelect]);
   const [tabs, setTabs] = useState(["visible", "hidden", "hidden"]);
 
-  const notSelect2 = "inline-flex p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group" 
-  const select2 = "inline-flex p-4 text-lime-800 border-b-2 border-lime-800 rounded-t-lg active dark:text-lime-800 dark:border-lime-800 group"
+  const notSelect2 = "inline-flex p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group" 
+  const select2 = "inline-flex p-2 text-lime-800 border-b-2 border-lime-800 rounded-t-lg active dark:text-lime-800 dark:border-lime-800 group"
   const [tabsOnSelect2, setTabsOnSelect2] = useState([select2, notSelect2, notSelect2]);
 
   function checkPassword() {
@@ -47,8 +47,12 @@ export default function Home() {
 
      { isAuthenticated &&
       <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold mt-4 text-center">Family Tree</h1>
-            <i className="text-center">Have updates to the tree? Please email marg624@gmail.com</i><br/>
+                <h2 className={`mb-4 text-3xl font-semibold`}>
+                Welcome to the <br/>[Campana, Guerrero, Miranda]<br/> Family Tree Site! 
+                </h2>
+                <div className="text-medium">
+                  Click below on the different family name tabs to view.<br/><br/>
+                </div>
               <div className="border-b border-gray-200 dark:border-gray-700">
                 <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
                     <li className="mr-2">
@@ -71,9 +75,12 @@ export default function Home() {
 
 
           <div className={tabs[0]}>
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-                  Campana Family Tree
-            </h2>
+            <div className={`mb-4`}>
+              <h2 className={`text-large`}>
+                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=6B1D6931D819CDBEAC37B4EE66CD16C48C0"><i>SmartDraw</i></a> Campana Family Tree project.
+              </h2>
+              <i className="text-sm">Please email marg624@gmail.com with modifications to the tree or access to edit on SmartDraw.</i><br/><br/>
+            </div>
             <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
               <Image
                 className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
@@ -88,9 +95,12 @@ export default function Home() {
           </div>
 
           <div className={tabs[1]}>
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-                  Guerrero Family Tree
+            <div className={`mb-4`}>
+              <h2 className={`text-large`}>
+                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=1C26B2FCC8499781C4B0407F12A14C927A5"><i>SmartDraw</i></a> Guerrero Family Tree project.
             </h2>
+              <i className="text-sm">Please email marg624@gmail.com with modifications to the tree or access to edit on SmartDraw.</i><br/><br/>
+            </div>
             <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
               <Image
                 className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
@@ -104,9 +114,12 @@ export default function Home() {
           </div>
 
           <div className={tabs[2]}>
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-                  Miranda Family Tree
+            <div className={`mb-4`}>
+              <h2 className={`text-large`}>
+                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=452468C51A481580818FD4D8A98A3C53518"><i>SmartDraw</i></a> Miranda Family Tree project.
             </h2>
+              <i className="text-sm">Please email marg624@gmail.com with modifications to the tree or access to edit on SmartDraw.</i><br/><br/>
+            </div>
             <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
               <Image
                 className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
