@@ -77,14 +77,14 @@ export default function Home() {
           <div className={tabs[0]}>
             <div className={`mb-4`}>
               <h2 className={`text-large`}>
-                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=6B1D6931D819CDBEAC37B4EE66CD16C48C0"><i>SmartDraw</i></a> Campana Family Tree project.
+                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=43013295ACEFE9A2EA2076684BCE2BBD3DC"><i>SmartDraw</i></a> Campana Family Tree project.
               </h2>
               <i className="text-sm">Please email marg624@gmail.com with modifications to the tree or access to edit on SmartDraw.</i><br/><br/>
             </div>
             <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
               <Image
-                className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src="/lola_campana.png"
+                className="relative"
+                src="https://app.smartdraw.com/cloudstorage/43013295ACEFE9A2EA2076684BCE2BBD3DC/preview2.png"
                 alt="Lola Campana Family Tree"
                 width={800}
                 height={37}
@@ -92,7 +92,9 @@ export default function Home() {
               />
               
             </div>
+             
           </div>
+
 
           <div className={tabs[1]}>
             <div className={`mb-4`}>
@@ -104,7 +106,7 @@ export default function Home() {
             <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
               <Image
                 className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src="/lola_guerrero.png"
+                src="https://app.smartdraw.com/cloudstorage/1C26B2FCC8499781C4B0407F12A14C927A5/preview2.png"
                 alt="Lola Guerrero Family Tree"
                 width={800}
                 height={37}
@@ -123,7 +125,7 @@ export default function Home() {
             <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
               <Image
                 className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src="/lolo.png"
+                src="https://app.smartdraw.com/cloudstorage/452468C51A481580818FD4D8A98A3C53518/preview2.png"
                 alt="Lolo Miranda Family Tree"
                 width={800}
                 height={37}
