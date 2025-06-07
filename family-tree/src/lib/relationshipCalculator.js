@@ -43,9 +43,9 @@ export class RelationshipCalculator {
 
     // Calculate relationship through common ancestors
     let ans = this.calculateRelationshipThroughAncestors(person1, person2, commonAncestors.res);
-    if (commonAncestors.addedByInLaw) {
+   /* if (commonAncestors.addedByInLaw) {
         ans += " (in-law)";
-    }
+    }*/
     return ans;
   }
 
