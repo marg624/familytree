@@ -24,8 +24,10 @@ export class RelationshipCalculator {
     const person2 = this.personMap.get(person2Id);
 
     if (!person1 || !person2) {
+      console.log(`Debug: Person not found - P1: ${person1Id} (${person1 ? 'found' : 'missing'}), P2: ${person2Id} (${person2 ? 'found' : 'missing'})`);
       return "unknown";
     }
+
 
     // Check for direct relationships first
     const directRelationship = this.checkDirectRelationship(person1, person2);
@@ -85,8 +87,30 @@ export class RelationshipCalculator {
     const ancestors1 = this.getAllAncestors(person1);
     const ancestors2 = this.getAllAncestors(person2);
 
+
     const commonAncestors = [];
     
+    // Special case: Check if person1 is an ancestor of person2
+    const person1AsAncestor = ancestors2.find(a => a.person.ID === person1.ID);
+    if (person1AsAncestor) {
+      commonAncestors.push({
+        ancestor: person1,
+        distance1: 0, // person1 to themselves
+        distance2: person1AsAncestor.distance
+      });
+    }
+    
+    // Special case: Check if person2 is an ancestor of person1  
+    const person2AsAncestor = ancestors1.find(a => a.person.ID === person2.ID);
+    if (person2AsAncestor) {
+      commonAncestors.push({
+        ancestor: person2,
+        distance1: person2AsAncestor.distance,
+        distance2: 0 // person2 to themselves
+      });
+    }
+    
+    // Check for shared ancestors
     ancestors1.forEach(ancestor1 => {
       ancestors2.forEach(ancestor2 => {
         if (ancestor1.person.ID === ancestor2.person.ID) {
@@ -134,7 +158,17 @@ export class RelationshipCalculator {
     const distance1 = closest.distance1;
     const distance2 = closest.distance2;
 
-    // Special cases for direct descendant relationships
+    // Special cases for direct ancestor/descendant relationships
+    if (distance1 === 0 && distance2 > 0) {
+      // person1 is an ancestor of person2
+      return this.getDescendantRelationship(distance2 - 1, "ancestor");
+    }
+    if (distance2 === 0 && distance1 > 0) {
+      // person2 is an ancestor of person1
+      return this.getDescendantRelationship(distance1 - 1, "descendant");
+    }
+
+    // Special cases for direct descendant relationships (when not self)
     if (distance1 === 1 && distance2 > 1) {
       return this.getDescendantRelationship(distance2 - 1, "descendant");
     }
@@ -230,22 +264,55 @@ export class RelationshipCalculator {
   }
 
   isInLaw(person1, person2) {
-    // Check if person2 is spouse's family member
+    // Check if they have a direct blood relationship first - if so, they're not in-laws
+    const directRelationship = this.checkDirectRelationship(person1, person2);
+    if (directRelationship && directRelationship !== 'spouse') {
+      return false; // Direct blood relatives are not in-laws
+    }
+
+    // Check if person2 is spouse's family member (but not person1's direct relative)
     if (person1.spouse) {
       const spouseFamily = this.getAllRelatives(person1.spouse);
       if (spouseFamily.some(relative => relative.ID === person2.ID)) {
-        return true;
+        // Make sure person2 is not person1's direct blood relative
+        const isDirectRelative = this.isDirectBloodRelative(person1, person2);
+        return !isDirectRelative;
       }
     }
 
-    // Check if person1 is spouse's family member
+    // Check if person1 is spouse's family member (but not person2's direct relative)
     if (person2.spouse) {
       const spouseFamily = this.getAllRelatives(person2.spouse);
       if (spouseFamily.some(relative => relative.ID === person1.ID)) {
-        return true;
+        // Make sure person1 is not person2's direct blood relative
+        const isDirectRelative = this.isDirectBloodRelative(person2, person1);
+        return !isDirectRelative;
       }
     }
 
+    return false;
+  }
+
+  isDirectBloodRelative(person1, person2) {
+    // Check for direct parent-child relationships
+    if (person1.children && person1.children.some(child => child.ID === person2.ID)) {
+      return true;
+    }
+    if (person1.parents && person1.parents.some(parent => parent.ID === person2.ID)) {
+      return true;
+    }
+    
+    // Check for siblings (same parents)
+    if (this.areSiblings(person1, person2)) {
+      return true;
+    }
+    
+    // Check for grandparent/grandchild relationships
+    const commonAncestors = this.findCommonAncestors(person1, person2);
+    if (commonAncestors.length > 0) {
+      return true; // Any common ancestor means they're blood relatives
+    }
+    
     return false;
   }
 

@@ -102,8 +102,11 @@ export async function buildFamilyTree(familyName) {
   // Create a map of people by ID
   const peopleMap = new Map();
   people.forEach(person => {
-    peopleMap.set(person.ID, {
+    // Ensure ID is string for consistent matching
+    const personId = String(person.ID);
+    peopleMap.set(personId, {
       ...person,
+      ID: personId, // Ensure ID property is also string
       children: [],
       parents: [],
       spouse: null
@@ -112,10 +115,19 @@ export async function buildFamilyTree(familyName) {
   
   // Process relationships
   relationships.forEach(rel => {
-    const person1 = peopleMap.get(rel.Person1_ID);
-    const person2 = peopleMap.get(rel.Person2_ID);
+    // Ensure IDs are strings for consistent matching
+    const person1Id = String(rel.Person1_ID);
+    const person2Id = String(rel.Person2_ID);
+    const person1 = peopleMap.get(person1Id);
+    const person2 = peopleMap.get(person2Id);
     
-    if (!person1 || !person2) return;
+    
+    if (!person1 || !person2) {
+      // Debug missing people
+      if (!person1) console.log(`Debug: Person1 with ID ${rel.Person1_ID} not found in peopleMap`);
+      if (!person2) console.log(`Debug: Person2 with ID ${rel.Person2_ID} not found in peopleMap`);
+      return;
+    }
     
     switch (rel.Relationship_Type?.toLowerCase()) {
       case 'parent':
