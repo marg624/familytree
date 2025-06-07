@@ -177,11 +177,11 @@ export class RelationshipCalculator {
     }
 
     // Aunt/Uncle and Niece/Nephew relationships
-    if (distance1 === 2 && distance2 === 1) {
+    if (distance1 === 1 && distance2 === 2) {
       // person1 is sibling of person2's parent → person1 is person2's aunt/uncle
       return "aunt/uncle";
     }
-    if (distance1 === 1 && distance2 === 2) {
+    if (distance1 === 2 && distance2 === 1) {
       // person1 is child of person2's sibling → person1 is person2's niece/nephew
       return "niece/nephew";
     }
