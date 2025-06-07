@@ -4,11 +4,15 @@ This is an interactive family tree website that displays family data from a Goog
 
 ## Features
 
-- **Interactive Family Tree**: Click on family members to view detailed information
-- **Expandable Nodes**: Use + buttons to expand and see children/descendants  
-- **Three Family Sections**: Separate tabs for Campana, Guerrero, and Miranda families
-- **Real-time Data**: Automatically fetches data from Google Spreadsheet
-- **Responsive Design**: Works on desktop and mobile devices
+- **Modern Interactive Design**: Clean, card-based interface with smooth animations
+- **Search Functionality**: Quickly find any family member by name
+- **Multiple View Modes**: Switch between Tree view and Grid view
+- **Photo Support**: Display family photos (add Photo_URL column to spreadsheet)
+- **Mobile Responsive**: Optimized for phones, tablets, and desktops
+- **Expandable Family Tree**: Click + buttons to expand and see descendants
+- **Detailed Person Profiles**: Click any person to see comprehensive information
+- **Three Family Sections**: Separate data sources for Campana, Guerrero, and Miranda families
+- **Real-time Data**: Automatically fetches latest data from Google Spreadsheet
 - **Password Protection**: Secure access with family password
 
 ## Data Source
@@ -23,10 +27,10 @@ Each family spreadsheet should have two tabs:
 ## Required Spreadsheet Format
 
 ### People Tab:
-| ID | First_Name | Last_Name | Birth_Date | Death_Date | Birth_Place |
-|----|------------|-----------|------------|------------|-------------|
-| 1 | Fortunato (Tato) | Campana | | | |
-| 2 | Basilia | Acuna | | | |
+| ID | First_Name | Last_Name | Birth_Date | Death_Date | Birth_Place | Photo_URL |
+|----|------------|-----------|------------|------------|-------------|-----------|
+| 1 | Fortunato (Tato) | Campana | | | | https://example.com/photo1.jpg |
+| 2 | Basilia | Acuna | | | | |
 
 ### Relationship Tab:
 | Person1_ID | Person2_ID | Relationship_Type |
@@ -36,8 +40,35 @@ Each family spreadsheet should have two tabs:
 
 **Notes:**
 - First_Name can include nicknames in parentheses
+- Photo_URL is optional - add direct links to photos (Google Drive, etc.)
 - Relationship_Type should be: "parent", "spouse"
 - Only one row needed per relationship (no reverse rows)
+
+## New Design Features
+
+### 🎨 Modern Interface
+- Clean card-based design with hover effects
+- Gradient backgrounds and smooth animations
+- Consistent color scheme using emerald/slate palette
+- Professional typography and spacing
+
+### 📱 Mobile-First Design
+- Responsive layout that works on all screen sizes
+- Touch-friendly buttons and interactions
+- Mobile-optimized detail modal
+- Sticky header for easy navigation
+
+### 🔍 Search & Navigation
+- Real-time search as you type
+- Search results with highlighting
+- Quick family switching with tabs
+- Tree view and grid view options
+
+### 👤 Person Profiles
+- Large photo display with fallback avatars
+- Detailed information panels
+- Clickable relationship links
+- Color-coded badges for different info types
 
 ## Getting Started
 

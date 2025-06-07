@@ -1,124 +1,130 @@
 "use client";
-import Image from 'next/image'
 import { useState } from "react";
 import FamilyTree from '../components/FamilyTree';
 
 export default function Home() {
-
   const [pw, setPw] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const notSelect = "w-5 h-5 mr-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
-  const select = "w-5 h-5 mr-2 text-blue-600 dark:text-blue-500"
-  const [tabsOnSelect, setTabsOnSelect] = useState([select, notSelect, notSelect]);
-  const [tabs, setTabs] = useState(["visible", "hidden", "hidden"]);
-
-  const notSelect2 = "inline-flex p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group" 
-  const select2 = "inline-flex p-2 text-lime-800 border-b-2 border-lime-800 rounded-t-lg active dark:text-lime-800 dark:border-lime-800 group"
-  const [tabsOnSelect2, setTabsOnSelect2] = useState([select2, notSelect2, notSelect2]);
+  const [activeTab, setActiveTab] = useState("campana");
 
   function checkPassword() {
-    if (pw == "hilaria") {
-      setIsAuthenticated(true)
+    if (pw === "hilaria") {
+      setIsAuthenticated(true);
     } else {
-      alert("Incorrect password. For access, please email marg624@gmail.com")
-      setIsAuthenticated(false)
+      alert("Incorrect password. For access, please email marg624@gmail.com");
+      setIsAuthenticated(false);
     }
   }
 
+  const families = [
+    { id: "campana", name: "Campana", color: "emerald" },
+    { id: "guerrero", name: "Guerrero", color: "blue" },
+    { id: "miranda", name: "Miranda", color: "purple" }
+  ];
+
   return (
-    <div>
-    {
-      !isAuthenticated && 
-        <main className="flex min-h-screen flex-col items-center justify-between p-12 bg-[url('/tree.png')]">
-            <div className="flex-wrap items-center justify-center text-center">
-                <h2 className={`mb-4 text-3xl font-semibold`}>
-                Welcome to the <br/>[Campana, Guerrero, Miranda]<br/> Family Tree Site! <br/>
-                </h2>
-                <div className="flex-wrap items-center justify-center space-y-3">
-                  Please enter the password to view:<br/>
-                  <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} className="border-2 border-slate-950 rounded" /><br/>
-                  <button onClick={checkPassword} className="bg-lime-800 text-white font-bold py-2 px-3 rounded">
-                      SUBMIT
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {!isAuthenticated && (
+        <main className="flex min-h-screen items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                </div>
+                <h1 className="text-2xl font-bold text-slate-900 mb-2">
+                  Family Tree
+                </h1>
+                <p className="text-slate-600">
+                  Campana • Guerrero • Miranda
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Enter Password
+                  </label>
+                  <input
+                    type="password"
+                    value={pw}
+                    onChange={(e) => setPw(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && checkPassword()}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors"
+                    placeholder="Family password"
+                  />
+                </div>
+                <button
+                  onClick={checkPassword}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+                >
+                  Access Family Tree
+                </button>
+              </div>
+              
+              <div className="mt-6 text-center">
+                <p className="text-xs text-slate-500">
+                  For access, contact marg624@gmail.com
+                </p>
+              </div>
+            </div>
+          </div>
+        </main>
+      )}
+
+      {isAuthenticated && (
+        <main className="min-h-screen">
+          {/* Header */}
+          <div className="bg-white border-b border-slate-200 sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between h-16">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                  </div>
+                  <h1 className="text-xl font-bold text-slate-900">Family Tree</h1>
+                </div>
+                <button
+                  onClick={() => setIsAuthenticated(false)}
+                  className="text-slate-500 hover:text-slate-700 text-sm font-medium"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Family Tabs */}
+          <div className="bg-white border-b border-slate-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <nav className="flex space-x-8">
+                {families.map((family) => (
+                  <button
+                    key={family.id}
+                    onClick={() => setActiveTab(family.id)}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                      activeTab === family.id
+                        ? `border-${family.color}-500 text-${family.color}-600`
+                        : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    }`}
+                  >
+                    {family.name} Family
                   </button>
-                </div>
-              </div>
+                ))}
+              </nav>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <FamilyTree familyName={activeTab} />
+          </div>
         </main>
-  
-    }
-
-     { isAuthenticated &&
-      <main className="flex min-h-screen flex-col items-center justify-between p-12 bg-[url('/tree.png')]">
-        <div className="text-center">
-                <h2 className={`mb-4 text-3xl font-semibold`}>
-                Welcome to the <br/>[Campana, Guerrero, Miranda]<br/> Family Tree Site! 
-                </h2>
-                <div className="text-medium">
-                  Click below on the different family name tabs to view.<br/><br/>
-                </div>
-              <div className="border-b border-gray-200 dark:border-gray-700">
-                <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
-                    <li className="mr-2">
-                        <a onClick={() => {setTabs(["visible", "hidden", "hidden"]); setTabsOnSelect([select, notSelect, notSelect]);setTabsOnSelect2([select2, notSelect2, notSelect2]);}} className={tabsOnSelect2[0]} >
-                            CAMPANA
-                        </a>
-                    </li>
-                    <li className="mr-2">
-                        <a  onClick={() => {setTabs(["hidden", "visible", "hidden"]);setTabsOnSelect([notSelect, select, notSelect]);setTabsOnSelect2([notSelect2, select2, notSelect2]);}}  className={tabsOnSelect2[1]}>
-                            GUERRERO
-                        </a>
-                    </li>
-                    <li className="mr-2">
-                        <a onClick={() => {setTabs(["hidden", "hidden", "visible"]); setTabsOnSelect([notSelect, notSelect, select]); setTabsOnSelect2([notSelect2, notSelect2, select2]);}}  className={tabsOnSelect2[2]}>             
-                            MIRANDA
-                        </a>
-                    </li>
-                </ul>
-              </div>
-
-
-          <div className={tabs[0]}>
-            <div className={`mb-4`}>
-              <h2 className={`text-large`}>
-                  <br/>
-                 Interactive Campana Family Tree
-              </h2>
-              <i className="text-sm">Click on family members to see details. Use + button to expand and see children.</i>
-            </div>
-            <div className="relative bg-white shadow-2xl rounded-lg p-6">
-              <FamilyTree familyName="Campana" />
-            </div>
-             
-          </div>
-
-
-          <div className={tabs[1]}>
-            <div className={`mb-4`}>
-              <h2 className={`text-large`}>
-              <br/>
-                 Interactive Guerrero Family Tree
-            </h2>
-              <i className="text-sm">Click on family members to see details. Use + button to expand and see children.</i>
-            </div>
-            <div className="relative bg-white shadow-2xl rounded-lg p-6">
-              <FamilyTree familyName="Guerrero" />
-            </div>
-          </div>
-
-          <div className={tabs[2]}>
-            <div className={`mb-4`}>
-              <h2 className={`text-large`}>
-                <br/>
-                 Interactive Miranda Family Tree
-            </h2>
-              <i className="text-sm">Click on family members to see details. Use + button to expand and see children.</i>
-            </div>
-            <div className="relative bg-white shadow-2xl rounded-lg p-6">
-              <FamilyTree familyName="Miranda" />
-            </div>
-          </div>
-        </div>
-        </main>
-      }
+      )}
     </div>
   )
 }
