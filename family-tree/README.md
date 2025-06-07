@@ -5,12 +5,14 @@ This is an interactive family tree website that displays family data from a Goog
 ## Features
 
 - **Modern Interactive Design**: Clean, card-based interface with smooth animations
+- **Advanced Relationship Calculator**: Find relationships between any two people (up to 7+ generations)
+- **Relationship Finder Tool**: Interactive tool to discover how any two family members are related
 - **Search Functionality**: Quickly find any family member by name
 - **Multiple View Modes**: Switch between Tree view and Grid view
 - **Photo Support**: Display family photos (add Photo_URL column to spreadsheet)
 - **Mobile Responsive**: Optimized for phones, tablets, and desktops
 - **Expandable Family Tree**: Click + buttons to expand and see descendants
-- **Detailed Person Profiles**: Click any person to see comprehensive information
+- **Detailed Person Profiles**: Click any person to see comprehensive information with relationship context
 - **Three Family Sections**: Separate data sources for Campana, Guerrero, and Miranda families
 - **Real-time Data**: Automatically fetches latest data from Google Spreadsheet
 - **Password Protection**: Secure access with family password
@@ -66,9 +68,46 @@ Each family spreadsheet should have two tabs:
 
 ### 👤 Person Profiles
 - Large photo display with fallback avatars
-- Detailed information panels
-- Clickable relationship links
+- Detailed information panels with relationship context
+- Clickable relationship links to navigate between family members
 - Color-coded badges for different info types
+
+### 🔗 Relationship Calculator
+- **Advanced Algorithm**: Calculates complex relationships through common ancestors
+- **7+ Generation Support**: Handles great-great-grandparents and beyond
+- **Comprehensive Relationships**: Supports all standard family relationships:
+  - Direct: parent, child, sibling, spouse
+  - Extended: grandparent, great-grandparent, aunt/uncle, niece/nephew
+  - Cousins: 1st cousin, 2nd cousin, 3rd cousin, etc.
+  - Removed: cousin 1x removed, cousin 2x removed, etc.
+  - Complex: in-laws, half-siblings, step-relationships
+- **Interactive Finder**: Dedicated tool to find relationships between any two people
+- **Real-time Context**: Shows relationships in person detail panels
+
+## Relationship Examples
+
+The relationship calculator can determine complex family connections:
+
+### Simple Relationships
+- **Basilia** to **Hilaria**: `grandparent` (parent's parent)
+- **Tranquilino** to **Fortunato**: `grandchild` (child's child)
+- **Isabel** to **Tomasa**: `sibling` (same parents)
+
+### Complex Relationships  
+- **Cousins**: People with same grandparents are 1st cousins
+- **2nd Cousins**: People with same great-grandparents are 2nd cousins
+- **Removed Cousins**: A cousin's child is "1x removed" (one generation difference)
+- **Great Relations**: Great-grandparent, great-great-grandparent, etc.
+
+### In-Law Relationships
+- Spouse's family members are marked as "in-law"
+- Half-siblings (sharing one parent) are marked as "half"
+
+### Usage
+1. Click the **"Relationships"** button in the family tree
+2. Search for two people using the dropdown menus
+3. See their relationship instantly calculated
+4. Click on any person in detail panels to see their relationships
 
 ## Getting Started
 

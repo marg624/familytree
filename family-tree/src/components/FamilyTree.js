@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { buildFamilyTree } from '../lib/sheetsApi';
+import { createRelationshipCalculator } from '../lib/relationshipCalculator';
+import RelationshipFinder from './RelationshipFinder';
 
 export default function FamilyTree({ familyName }) {
   const [familyData, setFamilyData] = useState([]);
@@ -9,6 +11,8 @@ export default function FamilyTree({ familyName }) {
   const [expandedNodes, setExpandedNodes] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('tree'); // 'tree' or 'grid'
+  const [showRelationshipFinder, setShowRelationshipFinder] = useState(false);
+  const [relationshipCalculator, setRelationshipCalculator] = useState(null);
 
   useEffect(() => {
     async function loadData() {
@@ -16,6 +20,11 @@ export default function FamilyTree({ familyName }) {
       try {
         const data = await buildFamilyTree(familyName);
         setFamilyData(data);
+        
+        // Create relationship calculator
+        if (data.length > 0) {
+          setRelationshipCalculator(createRelationshipCalculator(data));
+        }
       } catch (error) {
         console.error('Error loading family data:', error);
       } finally {
@@ -225,28 +234,46 @@ export default function FamilyTree({ familyName }) {
             </p>
           </div>
           
-          {/* View mode toggle */}
-          <div className="flex items-center bg-slate-100 rounded-lg p-1">
+          {/* View controls */}
+          <div className="flex items-center gap-2">
+            {/* Relationship Finder Toggle */}
             <button
-              onClick={() => setViewMode('tree')}
-              className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                viewMode === 'tree' 
-                  ? 'bg-white text-slate-900 shadow-sm' 
-                  : 'text-slate-600 hover:text-slate-900'
+              onClick={() => setShowRelationshipFinder(!showRelationshipFinder)}
+              className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors flex items-center ${
+                showRelationshipFinder 
+                  ? 'bg-emerald-100 text-emerald-700' 
+                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
               }`}
             >
-              Tree View
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m0 0l4-4a4 4 0 105.656-5.656l-1.102 1.102m-6.364 6.364L8 12l4-4" />
+              </svg>
+              Relationships
             </button>
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                viewMode === 'grid' 
-                  ? 'bg-white text-slate-900 shadow-sm' 
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Grid View
-            </button>
+            
+            {/* View mode toggle */}
+            <div className="flex items-center bg-slate-100 rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('tree')}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  viewMode === 'tree' 
+                    ? 'bg-white text-slate-900 shadow-sm' 
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Tree View
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  viewMode === 'grid' 
+                    ? 'bg-white text-slate-900 shadow-sm' 
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Grid View
+              </button>
+            </div>
           </div>
         </div>
 
@@ -276,6 +303,17 @@ export default function FamilyTree({ familyName }) {
           )}
         </div>
       </div>
+
+      {/* Relationship Finder */}
+      {showRelationshipFinder && (
+        <div className="mb-8">
+          <RelationshipFinder 
+            familyData={familyData}
+            selectedPerson={selectedPerson}
+            onPersonSelect={setSelectedPerson}
+          />
+        </div>
+      )}
 
       {/* Main content area */}
       <div className="flex gap-8">
@@ -361,17 +399,26 @@ export default function FamilyTree({ familyName }) {
                   <div className="border-t border-slate-200 pt-4">
                     <h5 className="font-medium text-slate-700 mb-2">Parents</h5>
                     <div className="space-y-2">
-                      {selectedPerson.parents.map(parent => (
-                        <div 
-                          key={parent.ID} 
-                          className="bg-blue-50 rounded-lg p-3 cursor-pointer hover:bg-blue-100 transition-colors"
-                          onClick={() => setSelectedPerson(parent)}
-                        >
-                          <div className="font-medium text-blue-900">
-                            {parent.First_Name} {parent.Last_Name}
+                      {selectedPerson.parents.map(parent => {
+                        const relationship = relationshipCalculator ? 
+                          relationshipCalculator.calculateRelationship(selectedPerson.ID, parent.ID) : '';
+                        return (
+                          <div 
+                            key={parent.ID} 
+                            className="bg-blue-50 rounded-lg p-3 cursor-pointer hover:bg-blue-100 transition-colors"
+                            onClick={() => setSelectedPerson(parent)}
+                          >
+                            <div className="font-medium text-blue-900">
+                              {parent.First_Name} {parent.Last_Name}
+                            </div>
+                            {relationship && (
+                              <div className="text-xs text-blue-600 capitalize">
+                                {relationship}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -382,17 +429,26 @@ export default function FamilyTree({ familyName }) {
                       Children ({selectedPerson.children.length})
                     </h5>
                     <div className="space-y-2 max-h-32 overflow-y-auto">
-                      {selectedPerson.children.map(child => (
-                        <div 
-                          key={child.ID} 
-                          className="bg-emerald-50 rounded-lg p-3 cursor-pointer hover:bg-emerald-100 transition-colors"
-                          onClick={() => setSelectedPerson(child)}
-                        >
-                          <div className="font-medium text-emerald-900">
-                            {child.First_Name} {child.Last_Name}
+                      {selectedPerson.children.map(child => {
+                        const relationship = relationshipCalculator ? 
+                          relationshipCalculator.calculateRelationship(selectedPerson.ID, child.ID) : '';
+                        return (
+                          <div 
+                            key={child.ID} 
+                            className="bg-emerald-50 rounded-lg p-3 cursor-pointer hover:bg-emerald-100 transition-colors"
+                            onClick={() => setSelectedPerson(child)}
+                          >
+                            <div className="font-medium text-emerald-900">
+                              {child.First_Name} {child.Last_Name}
+                            </div>
+                            {relationship && (
+                              <div className="text-xs text-emerald-600 capitalize">
+                                {relationship}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -476,17 +532,26 @@ export default function FamilyTree({ familyName }) {
                   <div className="border-t border-slate-200 pt-4">
                     <h5 className="font-medium text-slate-700 mb-2">Parents</h5>
                     <div className="space-y-2">
-                      {selectedPerson.parents.map(parent => (
-                        <div 
-                          key={parent.ID} 
-                          className="bg-blue-50 rounded-lg p-3"
-                          onClick={() => setSelectedPerson(parent)}
-                        >
-                          <div className="font-medium text-blue-900">
-                            {parent.First_Name} {parent.Last_Name}
+                      {selectedPerson.parents.map(parent => {
+                        const relationship = relationshipCalculator ? 
+                          relationshipCalculator.calculateRelationship(selectedPerson.ID, parent.ID) : '';
+                        return (
+                          <div 
+                            key={parent.ID} 
+                            className="bg-blue-50 rounded-lg p-3"
+                            onClick={() => setSelectedPerson(parent)}
+                          >
+                            <div className="font-medium text-blue-900">
+                              {parent.First_Name} {parent.Last_Name}
+                            </div>
+                            {relationship && (
+                              <div className="text-xs text-blue-600 capitalize">
+                                {relationship}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -497,17 +562,26 @@ export default function FamilyTree({ familyName }) {
                       Children ({selectedPerson.children.length})
                     </h5>
                     <div className="space-y-2">
-                      {selectedPerson.children.map(child => (
-                        <div 
-                          key={child.ID} 
-                          className="bg-emerald-50 rounded-lg p-3"
-                          onClick={() => setSelectedPerson(child)}
-                        >
-                          <div className="font-medium text-emerald-900">
-                            {child.First_Name} {child.Last_Name}
+                      {selectedPerson.children.map(child => {
+                        const relationship = relationshipCalculator ? 
+                          relationshipCalculator.calculateRelationship(selectedPerson.ID, child.ID) : '';
+                        return (
+                          <div 
+                            key={child.ID} 
+                            className="bg-emerald-50 rounded-lg p-3"
+                            onClick={() => setSelectedPerson(child)}
+                          >
+                            <div className="font-medium text-emerald-900">
+                              {child.First_Name} {child.Last_Name}
+                            </div>
+                            {relationship && (
+                              <div className="text-xs text-emerald-600 capitalize">
+                                {relationship}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
