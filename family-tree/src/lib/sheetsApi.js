@@ -1,12 +1,12 @@
 // Google Sheets API integration for family tree data
 // Default spreadsheet (Campana family)
-const DEFAULT_SPREADSHEET_ID = '18QyYByrlq1aPp_jyI2FW4AD5DQGQhlJ_FXxmICXKb80';
+const DEFAULT_SPREADSHEET_ID = '18QyYByrlq1aPp_jyI2FW4AD5DQGQhlJ_FXxmICXKb8';
 
 // Spreadsheet configurations for different families
 const FAMILY_SPREADSHEETS = {
   campana: '18QyYByrlq1aPp_jyI2FW4AD5DQGQhlJ_FXxmICXKb80',
-  guerrero: '18QyYByrlq1aPp_jyI2FW4AD5DQGQhlJ_FXxmICXKb80', // Update with actual Guerrero spreadsheet ID
-  miranda: '18QyYByrlq1aPp_jyI2FW4AD5DQGQhlJ_FXxmICXKb80'   // Update with actual Miranda spreadsheet ID
+  guerrero: '', // Update with actual Guerrero spreadsheet ID
+  miranda: ''   // Update with actual Miranda spreadsheet ID
 };
 
 function getSpreadsheetUrls(familyName) {
