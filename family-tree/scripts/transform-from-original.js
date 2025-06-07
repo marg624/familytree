@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-// Script to transform the current family tree spreadsheet format
-// to the new interactive format
+// Script to transform the ORIGINAL family tree spreadsheet format to the new interactive format
+// Uses the original spreadsheet with the complete data
 
-const SPREADSHEET_ID = '18QyYByrlq1aPp_jyI2FW4AD5DQGQhlJ_FXxmICXKb80';
-const PEOPLE_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=People`;
-const RELATIONSHIPS_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Relationship`;
+const ORIGINAL_SPREADSHEET_ID = '10BKQDd_k7oKzmF1Tie-9mPio9s9R1coMLrLGejWXt4c';
+const PEOPLE_URL = `https://docs.google.com/spreadsheets/d/${ORIGINAL_SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=People`;
+const RELATIONSHIPS_URL = `https://docs.google.com/spreadsheets/d/${ORIGINAL_SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Relationship`;
 
 async function fetchCSV(url) {
   const response = await fetch(url);
@@ -27,13 +27,11 @@ function parseCSV(csvText) {
     if (!line) continue;
     
     const values = parseCSVLine(line);
-    const row = {};
-    headers.forEach((header, index) => {
-      row[header] = (values[index] || '').replace(/"/g, '').trim();
-    });
-    
-    // Only add rows that have at least an ID
-    if (row.ID && row.ID !== '') {
+    if (values.length === headers.length) {
+      const row = {};
+      headers.forEach((header, index) => {
+        row[header] = values[index];
+      });
       data.push(row);
     }
   }
@@ -93,14 +91,14 @@ function parseName(fullName) {
 }
 
 async function transformData() {
-  console.log('🔄 Fetching current spreadsheet data...\n');
+  console.log('🔄 Fetching original spreadsheet data...\n');
   
   const [peopleData, relationshipData] = await Promise.all([
     fetchCSV(PEOPLE_URL),
     fetchCSV(RELATIONSHIPS_URL)
   ]);
   
-  console.log(`📊 Found ${peopleData.length} people and ${relationshipData.length} relationships\n`);
+  console.log(`📊 Found ${peopleData.length} people and ${relationshipData.length} relationships from ORIGINAL spreadsheet\n`);
   
   // Transform people data
   const transformedPeople = [];
@@ -110,10 +108,10 @@ async function transformData() {
   // Process each person and their spouse
   for (const person of peopleData) {
     const originalId = person.ID;
-    const originalName = person.Name || person.First_Name; // Handle both old and new format
+    const originalName = person.Name;
     const spouseName = person.Spouse;
     
-    if (!originalName || !originalId) continue;
+    if (!originalName) continue;
     
     // Add the main person
     const mainPersonName = parseName(originalName);
@@ -185,7 +183,7 @@ async function transformData() {
     }
   }
   
-  // Now add step-parent relationships (children are also children of their parent's spouse)
+  // Now add complete parent relationships (spouses are also parents of their partner's children)
   for (const parentChild of parentChildRelationships) {
     const parentId = parentChild.Person1_ID;
     const childId = parentChild.Person2_ID;
@@ -201,12 +199,12 @@ async function transformData() {
         ? spouseRelationship.Person2_ID 
         : spouseRelationship.Person1_ID;
       
-      // Check if this step-parent relationship doesn't already exist
-      const stepRelationshipExists = transformedRelationships.some(rel =>
+      // Check if this parent relationship doesn't already exist
+      const parentRelationshipExists = transformedRelationships.some(rel =>
         rel.Person1_ID === spouseId && rel.Person2_ID === childId && rel.Relationship_Type === 'parent'
       );
       
-      if (!stepRelationshipExists) {
+      if (!parentRelationshipExists) {
         transformedRelationships.push({
           Person1_ID: spouseId,
           Person2_ID: childId,
@@ -234,12 +232,13 @@ async function transformData() {
   }
   
   console.log('\n✅ Transformation complete!');
-  console.log(`📊 Generated ${transformedPeople.length} people and ${transformedRelationships.length} relationships`);
+  console.log(`📊 Generated ${transformedPeople.length} people and ${transformedRelationships.length} relationships (with complete parent relationships)`);
   console.log('\n📝 Instructions:');
   console.log('1. Copy the People data above and paste it into your People tab');
   console.log('2. Copy the Relationship data above and paste it into your Relationship tab');
   console.log('3. Make sure to replace ALL existing data in both tabs');
-  console.log('4. Your interactive family tree will then work automatically!');
+  console.log('4. This includes complete parent relationships where spouses are both parents');
+  console.log('5. Your interactive family tree will then work with all relationships!');
 }
 
 // Run the transformation

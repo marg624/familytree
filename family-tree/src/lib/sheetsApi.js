@@ -57,11 +57,13 @@ function parseCSV(csvText) {
     if (!line) continue;
     
     const values = parseCSVLine(line);
-    if (values.length === headers.length) {
-      const row = {};
-      headers.forEach((header, index) => {
-        row[header] = values[index];
-      });
+    const row = {};
+    headers.forEach((header, index) => {
+      row[header] = (values[index] || '').replace(/"/g, '').trim();
+    });
+    
+    // Add row if it has required fields
+    if ((row.ID && row.ID !== '') || (row.Person1_ID && row.Person1_ID !== '')) {
       data.push(row);
     }
   }

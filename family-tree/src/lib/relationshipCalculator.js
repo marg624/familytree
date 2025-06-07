@@ -116,7 +116,9 @@ export class RelationshipCalculator {
     if (person.parents && person.parents.length > 0) {
       person.parents.forEach(parent => {
         ancestors.push({ person: parent, distance: distance + 1 });
-        ancestors = ancestors.concat(this.getAllAncestors(parent, distance + 1, new Set(visited)));
+        // Create a new visited set for each recursive call to avoid blocking valid paths
+        const newVisited = new Set(visited);
+        ancestors = ancestors.concat(this.getAllAncestors(parent, distance + 1, newVisited));
       });
     }
 
