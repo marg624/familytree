@@ -28,8 +28,6 @@ export class RelationshipCalculator {
       return "unknown";
     }
 
-
-
     // Check for direct relationships first
     const directRelationship = this.checkDirectRelationship(person1, person2);
     if (directRelationship) {
@@ -88,6 +86,8 @@ export class RelationshipCalculator {
     const ancestors1 = this.getAllAncestors(person1);
     const ancestors2 = this.getAllAncestors(person2);
 
+    ancestors1.push({ person: person1, distance: 0 });
+    ancestors2.push({ person: person2, distance: 0 });
 
     const commonAncestors = [];
     
@@ -153,10 +153,11 @@ export class RelationshipCalculator {
     }
 
     // Special cases for direct descendant relationships (when not self)
-    if (distance1 === 1 && distance2 > 1) {
+    // Only apply when the difference is more than 1 generation (not aunt/uncle case)
+    if (distance1 === 1 && distance2 > 2) {
       return this.getDescendantRelationship(distance2 - 1, "descendant");
     }
-    if (distance2 === 1 && distance1 > 1) {
+    if (distance2 === 1 && distance1 > 2) {
       return this.getDescendantRelationship(distance1 - 1, "ancestor");
     }
 
@@ -260,7 +261,7 @@ export class RelationshipCalculator {
   isInLaw(person1, person2) {
     // Check if they have a direct blood relationship first - if so, they're not in-laws
     const directRelationship = this.checkDirectRelationship(person1, person2);
-    if (directRelationship && directRelationship !== 'spouse') {
+    if (directRelationship) { //&& directRelationship !== 'spouse') {
       return false; // Direct blood relatives are not in-laws
     }
 

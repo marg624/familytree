@@ -1,76 +1,9 @@
 // Relationship validation tests for family tree
 // These tests ensure the relationship calculator works correctly
 
-// Mock the functions for now since ES module imports are complex in Jest
-const basilia = { ID: '2', First_Name: 'Basilia', parents: [], children: [], spouse: null };
-const fortunato = { ID: '1', First_Name: 'Fortunato', parents: [], children: [], spouse: null };
-const isabel = { ID: '3', First_Name: 'Isabel', parents: [], children: [], spouse: null };
-const tomasa = { ID: '5', First_Name: 'Tomasa', parents: [], children: [], spouse: null };
-const hilaria = { ID: '21', First_Name: 'Hilaria', parents: [], children: [], spouse: null };
-const anicia = { ID: '13', First_Name: 'Anicia', parents: [], children: [], spouse: null };
-
-// Set up family relationships
-basilia.spouse = fortunato;
-fortunato.spouse = basilia;
-basilia.children = [isabel, tomasa];
-fortunato.children = [isabel, tomasa];
-isabel.parents = [basilia, fortunato];
-tomasa.parents = [basilia, fortunato];
-tomasa.children = [hilaria, anicia];
-hilaria.parents = [tomasa];
-anicia.parents = [tomasa];
-
-const mockFamilyData = [fortunato, basilia, isabel, tomasa, hilaria, anicia];
-
-// Add 50+ more mock people to meet the test requirement
-for (let i = 30; i < 80; i++) {
-  mockFamilyData.push({ ID: String(i), First_Name: `Person${i}`, parents: [], children: [], spouse: null });
-}
-
-const mockBuildFamilyTree = jest.fn().mockResolvedValue(mockFamilyData);
-const mockCalculateRelationship = jest.fn().mockImplementation((person1Id, person2Id) => {
-  // Mock the expected fixed relationships
-  const relationships = {
-    '2->13': 'grandparent',  // Basilia -> Anicia
-    '13->2': 'grandchild',   // Anicia -> Basilia
-    '13->21': 'cousin',      // Anicia -> Hilaria
-    '1->5': 'parent',        // Fortunato -> Tomasa
-    '5->1': 'child',         // Tomasa -> Fortunato
-    '2->21': 'grandparent',  // Basilia -> Hilaria (should be fixed now)
-    '21->2': 'grandchild',   // Hilaria -> Basilia
-    '3->21': 'aunt/uncle',   // Isabel -> Hilaria (should be fixed now)
-    '21->3': 'niece/nephew', // Hilaria -> Isabel (should be fixed now)
-    '3->5': 'sibling',       // Isabel -> Tomasa
-    '1->2': 'spouse',        // Fortunato -> Basilia
-    '2->1': 'spouse',        // Basilia -> Fortunato
-    '2->5': 'parent',        // Basilia -> Tomasa
-    '2->2': 'self',          // Self relationship
-    '1->1': 'self',          // Self relationship
-    '3->3': 'self',          // Self relationship
-    '2->99999': 'unknown',   // Unknown person test
-  };
-  
-  const key = `${person1Id}->${person2Id}`;
-  return relationships[key] || 'not related';
-});
-
-const mockCreateRelationshipCalculator = jest.fn(() => ({
-  calculateRelationship: mockCalculateRelationship,
-  getRelationshipWithContext: jest.fn().mockImplementation((person1Id, person2Id) => {
-    const relationship = mockCalculateRelationship(person1Id, person2Id);
-    return {
-      relationship,
-      context: '',
-      fullDescription: `Person ${person1Id} is Person ${person2Id}'s ${relationship}`
-    };
-  }),
-  findShortestPath: jest.fn().mockReturnValue([
-    { ID: '2', First_Name: 'Basilia' },
-    { ID: '5', First_Name: 'Tomasa' },
-    { ID: '21', First_Name: 'Hilaria' }
-  ]),
-  getAllAncestors: jest.fn().mockReturnValue([]),
-}));
+// Convert the ES modules to work with Jest using dynamic imports
+let buildFamilyTree;
+let createRelationshipCalculator;
 
 describe('Family Tree Relationship Calculator', () => {
   let familyData;
@@ -78,9 +11,18 @@ describe('Family Tree Relationship Calculator', () => {
   let people;
 
   beforeAll(async () => {
-    // Use mock data for now
-    familyData = await mockBuildFamilyTree('campana');
-    calculator = mockCreateRelationshipCalculator(familyData);
+    // Dynamically import the ES modules
+    const sheetsModule = await import('../src/lib/sheetsApi.js');
+    const calculatorModule = await import('../src/lib/relationshipCalculator.js');
+    
+    buildFamilyTree = sheetsModule.buildFamilyTree;
+    createRelationshipCalculator = calculatorModule.createRelationshipCalculator;
+    
+    // Build the family tree with REAL data
+    familyData = await buildFamilyTree('campana');
+    calculator = createRelationshipCalculator(familyData);
+    
+    console.log(`🔍 Testing with REAL data: ${familyData.length} people loaded`);
     
     // Create a lookup map for easier testing
     people = {};
@@ -90,6 +32,8 @@ describe('Family Tree Relationship Calculator', () => {
         people[key] = person;
       }
     });
+    
+    console.log('Available people for testing:', Object.keys(people).sort());
   });
 
   // Helper function to get person by partial name match
@@ -107,9 +51,25 @@ describe('Family Tree Relationship Calculator', () => {
   describe('Required Relationship Tests', () => {
     test('Basilia → Anicia: grandparent', () => {
       const basilia = findPerson('basilia');
-      const anicia = findPerson('anicia');
+      const anicia = findPerson('anicia'); // This should match 'aniciaaning'
+      
+      console.log(`Debug: Found Basilia: ${basilia?.First_Name} (${basilia?.ID})`);
+      console.log(`Debug: Found Anicia: ${anicia?.First_Name} (${anicia?.ID})`);
+      
+      // Debug the family tree structure
+      const felix = familyData.find(p => p.First_Name?.includes('Felix'));
+      console.log(`Debug: Felix: ${felix?.First_Name} (${felix?.ID})`);
+      console.log(`Debug: Felix parents: ${felix?.parents?.map(p => `${p.First_Name}(${p.ID})`).join(', ') || 'None'}`);
+      console.log(`Debug: Felix children: ${felix?.children?.map(p => `${p.First_Name}(${p.ID})`).join(', ') || 'None'}`);
+      console.log(`Debug: Anicia parents: ${anicia?.parents?.map(p => `${p.First_Name}(${p.ID})`).join(', ') || 'None'}`);
+      console.log(`Debug: Basilia children: ${basilia?.children?.map(p => `${p.First_Name}(${p.ID})`).join(', ') || 'None'}`);
+      
+      // Debug the relationship calculation
+      const aniciaAncestors = calculator.getAllAncestors(anicia);
+      console.log(`Debug: Anicia's ancestors: ${aniciaAncestors.map(a => `${a.person.First_Name}(${a.person.ID}):d${a.distance}`).join(', ')}`);
       
       const relationship = calculator.calculateRelationship(basilia.ID, anicia.ID);
+      console.log(`Debug: Relationship result: ${relationship}`);
       expect(relationship).toBe('grandparent');
     });
 
@@ -183,9 +143,24 @@ describe('Family Tree Relationship Calculator', () => {
       const basilia = findPerson('basilia');
       const fortunato = findPerson('fortunato');
       
-      const relationship = calculator.calculateRelationship(basilia.ID, fortunato.ID);
+      let relationship = calculator.calculateRelationship(basilia.ID, fortunato.ID);
+      expect(relationship).toBe('spouse');
+
+      relationship = calculator.calculateRelationship(fortunato.ID, basilia.ID);
       expect(relationship).toBe('spouse');
     });
+
+    test('Pablo (Pabling) → Anicia: spouse', () => {
+      const pabling = findPerson('pabling');
+      const anicia = findPerson('anicia');
+
+      let relationship = calculator.calculateRelationship(pabling.ID, anicia.ID);
+      expect(relationship).toBe('spouse');
+
+      relationship = calculator.calculateRelationship(anicia.ID, pabling.ID);
+      expect(relationship).toBe('spouse');
+    });
+
   });
 
   describe('Relationship Context Tests', () => {

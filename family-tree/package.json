@@ -24,16 +24,5 @@
     "jest": "^29.7.0",
     "postcss": "latest",
     "tailwindcss": "latest"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/__tests__/**/*.test.js"
-    ],
-    "testTimeout": 30000,
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
-    ],
-    "transform": {}
   }
 }
