@@ -1,6 +1,7 @@
 "use client";
 import Image from 'next/image'
 import { useState } from "react";
+import FamilyTree from '../components/FamilyTree';
 
 export default function Home() {
 
@@ -79,20 +80,12 @@ export default function Home() {
             <div className={`mb-4`}>
               <h2 className={`text-large`}>
                   <br/>
-                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=43013295ACEFE9A2EA2076684BCE2BBD3DC"><i>SmartDraw</i></a> Campana Family Tree project.
+                 Interactive Campana Family Tree
               </h2>
-              <i className="text-sm">Please email marg624@gmail.com with modifications to the tree or access to edit on SmartDraw.</i>
+              <i className="text-sm">Click on family members to see details. Use + button to expand and see children.</i>
             </div>
-            <div className="relative flex place-items-center bg-amber-50 shadow-2xl rounded-lg">
-              <Image
-                className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src="https://app.smartdraw.com/cloudstorage/43013295ACEFE9A2EA2076684BCE2BBD3DC/preview2.png"
-                alt="Lola Campana Family Tree"
-                width={800}
-                height={37}
-                priority
-              />
-              
+            <div className="relative bg-white shadow-2xl rounded-lg p-6">
+              <FamilyTree familyName="Campana" />
             </div>
              
           </div>
@@ -102,19 +95,12 @@ export default function Home() {
             <div className={`mb-4`}>
               <h2 className={`text-large`}>
               <br/>
-                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=1C26B2FCC8499781C4B0407F12A14C927A5"><i>SmartDraw</i></a> Guerrero Family Tree project.
+                 Interactive Guerrero Family Tree
             </h2>
-              <i className="text-sm">Please email marg624@gmail.com with modifications to the tree or access to edit on SmartDraw.</i>
+              <i className="text-sm">Click on family members to see details. Use + button to expand and see children.</i>
             </div>
-            <div className="relative flex place-items-center bg-amber-50 shadow-2xl rounded-lg">
-              <Image
-                className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src="https://app.smartdraw.com/cloudstorage/1C26B2FCC8499781C4B0407F12A14C927A5/preview2.png"
-                alt="Lola Guerrero Family Tree"
-                width={800}
-                height={37}
-                priority
-              />
+            <div className="relative bg-white shadow-2xl rounded-lg p-6">
+              <FamilyTree familyName="Guerrero" />
             </div>
           </div>
 
@@ -122,19 +108,12 @@ export default function Home() {
             <div className={`mb-4`}>
               <h2 className={`text-large`}>
                 <br/>
-                 Link to <a href="https://app.smartdraw.com/share.aspx/?pubDocShare=452468C51A481580818FD4D8A98A3C53518"><i>SmartDraw</i></a> Miranda Family Tree project.
+                 Interactive Miranda Family Tree
             </h2>
-              <i className="text-sm">Please email marg624@gmail.com with modifications to the tree or access to edit on SmartDraw.</i>
+              <i className="text-sm">Click on family members to see details. Use + button to expand and see children.</i>
             </div>
-            <div className="relative flex place-items-center bg-amber-50 shadow-2xl rounded-lg">
-              <Image
-                className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-                src="https://app.smartdraw.com/cloudstorage/452468C51A481580818FD4D8A98A3C53518/preview2.png"
-                alt="Lolo Miranda Family Tree"
-                width={800}
-                height={37}
-                priority
-              />
+            <div className="relative bg-white shadow-2xl rounded-lg p-6">
+              <FamilyTree familyName="Miranda" />
             </div>
           </div>
         </div>
