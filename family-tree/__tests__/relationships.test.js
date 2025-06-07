@@ -161,6 +161,28 @@ describe('Family Tree Relationship Calculator', () => {
       expect(relationship).toBe('spouse');
     });
 
+    test('Basilia → Maxima: parent in-law', () => {
+      const basilia = findPerson('basilia');
+      const maxima = findPerson('maxima');
+
+      let relationship = calculator.calculateRelationship(basilia.ID, maxima.ID);
+      expect(relationship).toBe('parent (in-law)');
+
+      relationship = calculator.calculateRelationship(maxima.ID, basilia.ID);
+      expect(relationship).toBe('child (in-law)');
+    });
+
+    test('Tato → Joaquin: parent in-law', () => {
+      const tato = findPerson('tato');
+      const joaquin = findPerson('joaquin');
+
+      let relationship = calculator.calculateRelationship(tato.ID, joaquin.ID);
+      expect(relationship).toBe('parent (in-law)');
+
+      relationship = calculator.calculateRelationship(joaquin.ID, tato.ID);
+      expect(relationship).toBe('child (in-law)');
+    });
+
   });
 
   describe('Relationship Context Tests', () => {

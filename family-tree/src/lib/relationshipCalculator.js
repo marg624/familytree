@@ -35,14 +35,37 @@ export class RelationshipCalculator {
     }
 
     // Find common ancestors
-    const commonAncestors = this.findCommonAncestors(person1, person2);
+    const commonAncestors = this.findCommonAncestorsWithSpouses(person1, person2);
     
-    if (commonAncestors.length === 0) {
+    if (commonAncestors.res.length === 0) {
       return "not related";
     }
 
     // Calculate relationship through common ancestors
-    return this.calculateRelationshipThroughAncestors(person1, person2, commonAncestors);
+    let ans = this.calculateRelationshipThroughAncestors(person1, person2, commonAncestors.res);
+    if (commonAncestors.addedByInLaw) {
+        ans += " (in-law)";
+    }
+    return ans;
+  }
+
+  findCommonAncestorsWithSpouses(person1, person2) {
+    let addInLaw = false;
+    let commonAncestors = this.findCommonAncestors(person1, person2);
+    if (commonAncestors.length === 0 && person1.spouse) {
+        commonAncestors = this.findCommonAncestors(person1.spouse, person2);
+        addInLaw = true;
+    }
+    if (commonAncestors.length === 0 && person2.spouse) {
+        commonAncestors = this.findCommonAncestors(person1, person2.spouse);
+        addInLaw = true;
+    }
+    if (commonAncestors.length === 0 && person2.spouse && person1.spouse) {
+        commonAncestors = this.findCommonAncestors(person1.spouse, person2.spouse);
+        addInLaw = true;
+    }
+    // find common ancestors via spouse
+    return { res: commonAncestors, addedByInLaw: addInLaw };
   }
 
   checkDirectRelationship(person1, person2) {
@@ -204,7 +227,9 @@ export class RelationshipCalculator {
   }
 
   getDescendantRelationship(generations, direction) {
-    if (generations === 1) {
+    if (generations === 0) {
+      return direction === "ancestor" ? "parent" : "child";
+    } else  if (generations === 1) {
       return direction === "ancestor" ? "grandparent" : "grandchild";
     } else if (generations === 2) {
       return direction === "ancestor" ? "great-grandparent" : "great-grandchild";
