@@ -29,6 +29,7 @@ export class RelationshipCalculator {
     }
 
 
+
     // Check for direct relationships first
     const directRelationship = this.checkDirectRelationship(person1, person2);
     if (directRelationship) {
@@ -90,25 +91,8 @@ export class RelationshipCalculator {
 
     const commonAncestors = [];
     
-    // Special case: Check if person1 is an ancestor of person2
-    const person1AsAncestor = ancestors2.find(a => a.person.ID === person1.ID);
-    if (person1AsAncestor) {
-      commonAncestors.push({
-        ancestor: person1,
-        distance1: 0, // person1 to themselves
-        distance2: person1AsAncestor.distance
-      });
-    }
-    
-    // Special case: Check if person2 is an ancestor of person1  
-    const person2AsAncestor = ancestors1.find(a => a.person.ID === person2.ID);
-    if (person2AsAncestor) {
-      commonAncestors.push({
-        ancestor: person2,
-        distance1: person2AsAncestor.distance,
-        distance2: 0 // person2 to themselves
-      });
-    }
+    // Note: Removed special case logic for direct ancestors as it was causing issues
+    // The regular common ancestor logic below should handle all cases correctly
     
     // Check for shared ancestors
     ancestors1.forEach(ancestor1 => {
