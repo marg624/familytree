@@ -57,10 +57,10 @@ export class RelationshipCalculator {
 
     // Check parent-child relationships
     if (person1.children && person1.children.some(child => child.ID === person2.ID)) {
-      return "child";
+      return "parent";  // person1 is parent of person2
     }
     if (person2.children && person2.children.some(child => child.ID === person1.ID)) {
-      return "parent";
+      return "child";   // person1 is child of person2
     }
 
     // Check if they are siblings (same parents)
