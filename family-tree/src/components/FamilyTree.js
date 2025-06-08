@@ -93,13 +93,18 @@ export default function FamilyTree({ familyName }) {
                     e.stopPropagation();
                     toggleExpand(person.ID);
                   }}
-                  className={`absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                  className={`absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-colors ${
                     isExpanded 
                       ? 'bg-emerald-500 text-white' 
                       : 'bg-slate-200 text-slate-600 hover:bg-emerald-200'
                   }`}
+                  title={isExpanded ? 'Collapse family' : 'Expand to see family'}
                 >
-                  {isExpanded ? '−' : '+'}
+                  <svg className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${
+                    isExpanded ? 'rotate-180' : ''
+                  }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
               )}
             </div>
@@ -437,7 +442,10 @@ export default function FamilyTree({ familyName }) {
                 {selectedPerson.spouse && (
                   <div className="border-t border-slate-200 pt-4">
                     <h5 className="font-medium text-slate-700 mb-2">Spouse</h5>
-                    <div className="bg-pink-50 rounded-lg p-3">
+                    <div 
+                      className="bg-pink-50 rounded-lg p-3 cursor-pointer hover:bg-pink-100 transition-colors"
+                      onClick={() => setSelectedPerson(selectedPerson.spouse)}
+                    >
                       <div className="font-medium text-pink-900">
                         {selectedPerson.spouse.First_Name} {selectedPerson.spouse.Last_Name}
                       </div>
