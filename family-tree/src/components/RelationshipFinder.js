@@ -8,6 +8,7 @@ export default function RelationshipFinder({ familyData, selectedPerson, onPerso
   const [searchTerm1, setSearchTerm1] = useState('');
   const [searchTerm2, setSearchTerm2] = useState('');
   const [relationship, setRelationship] = useState(null);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [showDropdown1, setShowDropdown1] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [calculator, setCalculator] = useState(null);
@@ -37,14 +38,21 @@ export default function RelationshipFinder({ familyData, selectedPerson, onPerso
     return fullName.includes(searchTerm2.toLowerCase());
   });
 
-  const calculateRelationship = () => {
+  const calculateRelationship = async () => {
     if (!person1 || !person2 || !calculator) {
       setRelationship(null);
+      setIsCalculating(false);
       return;
     }
 
+    setIsCalculating(true);
+    
+    // Add a small delay to show loading state for complex calculations
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
     const result = calculator.getRelationshipWithContext(person1.ID, person2.ID);
     setRelationship(result);
+    setIsCalculating(false);
   };
 
   useEffect(() => {
@@ -55,9 +63,6 @@ export default function RelationshipFinder({ familyData, selectedPerson, onPerso
     setPerson1(person);
     setSearchTerm1(`${person.First_Name} ${person.Last_Name}`);
     setShowDropdown1(false);
-    if (onPersonSelect) {
-      onPersonSelect(person);
-    }
   };
 
   const selectPerson2 = (person) => {
@@ -243,8 +248,20 @@ export default function RelationshipFinder({ familyData, selectedPerson, onPerso
           )}
         </div>
 
+        {/* Loading State */}
+        {person1 && person2 && isCalculating && (
+          <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <div className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-500 mr-2"></div>
+                <div className="text-sm text-slate-600">Calculating relationship...</div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Relationship Result */}
-        {person1 && person2 && relationship && (
+        {person1 && person2 && !isCalculating && relationship && (
           <div className="mt-6 p-4 bg-gradient-to-r from-slate-50 to-emerald-50 rounded-lg border border-slate-200">
             <div className="text-center">
               <div className="text-sm text-slate-600 mb-2">Relationship</div>
@@ -265,7 +282,7 @@ export default function RelationshipFinder({ familyData, selectedPerson, onPerso
           </div>
         )}
 
-        {person1 && person2 && relationship?.relationship === 'not related' && (
+        {person1 && person2 && !isCalculating && relationship?.relationship === 'not related' && (
           <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
             <div className="text-center">
               <div className="text-amber-800 font-medium">Not Related</div>
@@ -276,7 +293,7 @@ export default function RelationshipFinder({ familyData, selectedPerson, onPerso
           </div>
         )}
 
-        {person1 && person2 && relationship?.relationship === 'self' && (
+        {person1 && person2 && !isCalculating && relationship?.relationship === 'self' && (
           <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <div className="text-center">
               <div className="text-blue-800 font-medium">Same Person</div>
