@@ -115,7 +115,7 @@ export default function FamilyTree({ familyName }) {
                     Born {person.Birth_Date}
                   </span>
                 )}
-                {person.spouse && (
+                {person.spouse && !isExpanded && (
                   <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full whitespace-nowrap">
                     ♥ {person.spouse.First_Name} {person.spouse.Last_Name}
                   </span>
@@ -132,9 +132,50 @@ export default function FamilyTree({ familyName }) {
           </div>
         </div>
         
-        {/* Children - better mobile indentation */}
+        {/* Children with Parents Header - better mobile indentation */}
         {hasChildren && isExpanded && (
           <div className="mt-3 sm:mt-4 ml-3 sm:ml-6 border-l-2 border-slate-200 pl-3 sm:pl-6">
+            {/* Spouse Section */}
+            {person.spouse && (
+              <div className="mb-4">
+                <h4 className="text-xs sm:text-sm font-medium text-slate-500 mb-2 flex items-center">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  Spouse
+                </h4>
+                <div 
+                  className="bg-white border-2 border-pink-200 rounded-xl p-3 sm:p-4 cursor-pointer hover:bg-pink-50 transition-colors mb-4"
+                  onClick={() => setSelectedPerson(person.spouse)}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full flex items-center justify-center flex-shrink-0">
+                      {person.spouse.Photo_URL ? (
+                        <img 
+                          src={person.spouse.Photo_URL} 
+                          alt={`${person.spouse.First_Name} ${person.spouse.Last_Name}`}
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-slate-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-pink-900 text-sm leading-tight">
+                        {person.spouse.First_Name} {person.spouse.Last_Name}
+                      </h5>
+                      {person.spouse.Birth_Date && (
+                        <p className="text-xs text-pink-600">Born {person.spouse.Birth_Date}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Children Section */}
             <h4 className="text-xs sm:text-sm font-medium text-slate-500 mb-2 sm:mb-3 flex items-center">
               <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
