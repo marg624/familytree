@@ -10,7 +10,7 @@ export default function FamilyTree({ familyName }) {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [expandedNodes, setExpandedNodes] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState('tree'); // 'tree' or 'grid'
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [showRelationshipFinder, setShowRelationshipFinder] = useState(false);
   const [relationshipCalculator, setRelationshipCalculator] = useState(null);
 
@@ -57,28 +57,32 @@ export default function FamilyTree({ familyName }) {
     const isExpanded = expandedNodes.has(person.ID);
     const isSelected = selectedPerson?.ID === person.ID;
     
+    // Better mobile indentation - use smaller increments and max out sooner
+    const mobileIndent = Math.min(level * 2, 8); // Max 8 (32px)
+    const desktopIndent = Math.min(level * 6, 24); // Max 24 (96px)
+    
     return (
-      <div className={`${!isSearchResult ? `ml-${Math.min(level * 6, 24)}` : ''} mb-4`}>
+      <div className={`${!isSearchResult ? `ml-${mobileIndent} sm:ml-${desktopIndent}` : ''} mb-3 sm:mb-4`}>
         <div 
-          className={`relative group bg-white border-2 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:shadow-lg ${
+          className={`relative group bg-white border-2 rounded-xl p-3 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-lg ${
             isSelected 
               ? 'border-emerald-500 bg-emerald-50 shadow-md' 
               : 'border-slate-200 hover:border-emerald-300'
           }`}
           onClick={() => setSelectedPerson(person)}
         >
-          <div className="flex items-center space-x-4">
-            {/* Photo placeholder */}
-            <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full flex items-center justify-center">
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            {/* Photo placeholder - smaller on mobile */}
+            <div className="relative flex-shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full flex items-center justify-center">
                 {person.Photo_URL ? (
                   <img 
                     src={person.Photo_URL} 
                     alt={`${person.First_Name} ${person.Last_Name}`}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <svg className="w-6 h-6 text-slate-500" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-slate-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                 )}
@@ -89,7 +93,7 @@ export default function FamilyTree({ familyName }) {
                     e.stopPropagation();
                     toggleExpand(person.ID);
                   }}
-                  className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                  className={`absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                     isExpanded 
                       ? 'bg-emerald-500 text-white' 
                       : 'bg-slate-200 text-slate-600 hover:bg-emerald-200'
@@ -100,19 +104,19 @@ export default function FamilyTree({ familyName }) {
               )}
             </div>
             
-            {/* Person info */}
+            {/* Person info - better mobile layout */}
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-slate-900 truncate">
+              <h3 className="font-semibold text-slate-900 text-sm sm:text-base leading-tight">
                 {person.First_Name} {person.Last_Name}
               </h3>
-              <div className="flex flex-wrap gap-2 mt-1">
+              <div className="flex flex-wrap gap-1 sm:gap-2 mt-1">
                 {person.Birth_Date && (
-                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full whitespace-nowrap">
                     Born {person.Birth_Date}
                   </span>
                 )}
                 {person.spouse && (
-                  <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full">
+                  <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full whitespace-nowrap">
                     ♥ {person.spouse.First_Name} {person.spouse.Last_Name}
                   </span>
                 )}
@@ -128,11 +132,11 @@ export default function FamilyTree({ familyName }) {
           </div>
         </div>
         
-        {/* Children */}
+        {/* Children - better mobile indentation */}
         {hasChildren && isExpanded && (
-          <div className="mt-4 ml-6 border-l-2 border-slate-200 pl-6">
-            <h4 className="text-sm font-medium text-slate-500 mb-3 flex items-center">
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mt-3 sm:mt-4 ml-3 sm:ml-6 border-l-2 border-slate-200 pl-3 sm:pl-6">
+            <h4 className="text-xs sm:text-sm font-medium text-slate-500 mb-2 sm:mb-3 flex items-center">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               Children ({person.children.length})
@@ -146,21 +150,14 @@ export default function FamilyTree({ familyName }) {
     );
   };
 
-  const GridView = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {filteredData.map(person => (
-        <PersonCard key={person.ID} person={person} isSearchResult={true} />
-      ))}
-    </div>
-  );
 
   const TreeView = () => {
     const displayData = searchTerm ? filteredData : familyData;
     
     if (searchTerm) {
       return (
-        <div className="space-y-4">
-          <div className="text-sm text-slate-600 mb-4">
+        <div className="space-y-3 sm:space-y-4">
+          <div className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4 px-1">
             Found {filteredData.length} people matching "{searchTerm}"
           </div>
           {filteredData.map(person => (
@@ -186,7 +183,7 @@ export default function FamilyTree({ familyName }) {
     }
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {rootNodes.map(person => (
           <PersonCard key={person.ID} person={person} />
         ))}
@@ -222,9 +219,9 @@ export default function FamilyTree({ familyName }) {
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Header with search and controls */}
+      {/* Header */}
       <div className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
           <div>
             <h2 className="text-2xl font-bold text-slate-900 capitalize">
               {familyName} Family Tree
@@ -234,73 +231,85 @@ export default function FamilyTree({ familyName }) {
             </p>
           </div>
           
-          {/* View controls */}
-          <div className="flex items-center gap-2">
-            {/* Relationship Finder Toggle */}
+          {/* Search and Relationship Controls */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Search */}
+            <div className="relative min-w-0 flex-1 sm:flex-initial">
+              {!isSearchExpanded ? (
+                <button
+                  onClick={() => setIsSearchExpanded(true)}
+                  className="w-full sm:w-auto px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 flex items-center shadow-sm border-2 bg-white text-slate-700 border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <span className="hidden sm:inline">Search Family</span>
+                  <span className="sm:hidden">Search</span>
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              ) : (
+                <div className="relative w-full sm:w-80">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search family members..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onBlur={() => {
+                      if (!searchTerm) {
+                        setIsSearchExpanded(false);
+                      }
+                    }}
+                    autoFocus
+                    className="w-full pl-10 pr-10 py-3 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                  />
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setIsSearchExpanded(false);
+                    }}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    <svg className="h-5 w-5 text-slate-400 hover:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  {searchTerm && (
+                    <div className="absolute top-full left-0 right-0 mt-1 text-xs text-slate-600 bg-white px-3 py-1 rounded border shadow-sm">
+                      {filteredData.length} result{filteredData.length !== 1 ? 's' : ''}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {/* Relationship Finder */}
             <button
               onClick={() => setShowRelationshipFinder(!showRelationshipFinder)}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors flex items-center ${
+              className={`px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 flex items-center shadow-sm border-2 ${
                 showRelationshipFinder 
-                  ? 'bg-emerald-100 text-emerald-700' 
-                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-emerald-200' 
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700'
               }`}
             >
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m0 0l4-4a4 4 0 105.656-5.656l-1.102 1.102m-6.364 6.364L8 12l4-4" />
               </svg>
-              Relationships
-            </button>
-            
-            {/* View mode toggle */}
-            <div className="flex items-center bg-slate-100 rounded-lg p-1">
-              <button
-                onClick={() => setViewMode('tree')}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  viewMode === 'tree' 
-                    ? 'bg-white text-slate-900 shadow-sm' 
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Tree View
-              </button>
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  viewMode === 'grid' 
-                    ? 'bg-white text-slate-900 shadow-sm' 
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Grid View
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Search bar */}
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <input
-            type="text"
-            placeholder="Search family members..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors"
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
-            >
-              <svg className="h-5 w-5 text-slate-400 hover:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              <span className="hidden sm:inline">{showRelationshipFinder ? 'Hide Relationships' : 'Find Relationships'}</span>
+              <span className="sm:hidden">Relations</span>
+              <svg className={`w-4 h-4 ml-2 transition-transform ${
+                showRelationshipFinder ? 'rotate-180' : ''
+              }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-          )}
+          </div>
         </div>
       </div>
 
@@ -317,10 +326,10 @@ export default function FamilyTree({ familyName }) {
 
       {/* Main content area */}
       <div className="flex gap-8">
-        {/* Tree/Grid View */}
+        {/* Tree View */}
         <div className={`${selectedPerson ? 'lg:w-2/3' : 'w-full'} transition-all duration-300`}>
-          <div className="bg-slate-50 rounded-xl p-6 min-h-96">
-            {viewMode === 'tree' ? <TreeView /> : <GridView />}
+          <div className="bg-slate-50 rounded-xl p-3 sm:p-6 min-h-96 overflow-x-auto">
+            <TreeView />
           </div>
         </div>
         
